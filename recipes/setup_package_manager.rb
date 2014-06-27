@@ -29,9 +29,9 @@ when "redhat","centos","amazon","scientific"
   execute "install ambari hdp repo" do
     case node['platform_version'].to_i
     when 5
-      yum_repo = default[:ambari][:rhel_5_repo]
+      yum_repo = node[:ambari][:rhel_5_repo]
     when 6
-      yum_repo = default[:ambari][:rhel_6_repo]
+      yum_repo = node[:ambari][:rhel_6_repo]
     end
     command "wget #{yum_repo} -O /etc/yum.repos.d/ambari.repo"
     not_if do
@@ -40,7 +40,7 @@ when "redhat","centos","amazon","scientific"
   end
 when "suse"
   execute "install ambari hdp repo" do
-    command "wget #{default[:suse][:suse_11_repo]} -O /etc/yum.repos.d/ambari.repo"
+    command "wget #{node[:suse][:suse_11_repo]} -O /etc/yum.repos.d/ambari.repo"
     not_if do
       ::File.exists?("/etc/zypp/repos.d/ambari.repo")
     end
