@@ -70,7 +70,7 @@ Attributes
     <td><tt>http://public-repo-1.hortonworks.com/ambari/suse11/1.x/updates/1.6.0/ambari.repo</tt></td>
   </tr>
   <tr>
-    <td><tt>node['ambari']['server']['fdqn']</tt></td>
+    <td><tt>node['ambari']['server_fdqn']</tt></td>
     <td>String</td>
     <td>FQDN for the Ambari server</td>
     <td><tt>Found by searching a node using the recipe ambari::server in the same environment</tt></td>
