@@ -17,6 +17,8 @@
 # limitations under the License.
 #
 
+include_recipe "ambari::setup_package_manager"
+
 %w'ambari-server
 postgresql'.each do | pack |
   package pack do
