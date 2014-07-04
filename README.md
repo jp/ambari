@@ -90,7 +90,7 @@ Blueprints Attributes
   </tr>
   <tr>
     <td><tt>node['ambari']['blueprints']['blueprint_json']</tt></td>
-    <td>JSON description of the Blueprint. [See a single-node example here](https://cwiki.apache.org/confluence/display/AMBARI/Blueprints#Blueprints-ExampleBlueprint)</td>
+    <td>JSON description of the Blueprint. See a single-node example here : https://cwiki.apache.org/confluence/display/AMBARI/Blueprints#Blueprints-ExampleBlueprint</td>
   </tr>
   <tr>
     <td><tt>node['ambari']['blueprints']['cluster_name']</tt></td>
@@ -98,7 +98,7 @@ Blueprints Attributes
   </tr>
   <tr>
     <td><tt>node['ambari']['blueprints']['cluster_json']</tt></td>
-    <td>JSON template for the Cluster. [See a single-node example here](https://cwiki.apache.org/confluence/display/AMBARI/Blueprints#Blueprints-ExampleClusterCreationTemplate)</td>
+    <td>JSON template for the Cluster. See a single-node example here: https://cwiki.apache.org/confluence/display/AMBARI/Blueprints#Blueprints-ExampleClusterCreationTemplate</td>
   </tr>
 </table>
 
