@@ -41,41 +41,67 @@ The Ambari Server will be automatically detected, but you can override this dete
 }
 ```
 
-Attributes
+#### ambari::server
+
+Include `ambari::blueprints` in your node's `run_list`. Then configure the `blueprints` attributes listed below.
+
+Main Attributes
 ----------
 
 <table>
   <tr>
     <th>Key</th>
-    <th>Type</th>
     <th>Description</th>
     <th>Default</th>
   </tr>
   <tr>
     <td><tt>node['ambari']['rhel_5_repo']</tt></td>
-    <td>String</td>
     <td>URL for the RHEL 5.x repository</td>
     <td><tt>http://public-repo-1.hortonworks.com/ambari/centos5/1.x/updates/1.6.0/ambari.repo</tt></td>
   </tr>
   <tr>
     <td><tt>node['ambari']['rhel_6_repo']</tt></td>
-    <td>String</td>
     <td>URL for the RHEL 6.x repository</td>
     <td><tt>http://public-repo-1.hortonworks.com/ambari/centos6/1.x/updates/1.6.0/ambari.repo</tt></td>
   </tr>
   <tr>
     <td><tt>node['ambari']['suse_11_repo']</tt></td>
-    <td>String</td>
     <td>URL for the Suse 11.x repository</td>
     <td><tt>http://public-repo-1.hortonworks.com/ambari/suse11/1.x/updates/1.6.0/ambari.repo</tt></td>
   </tr>
   <tr>
     <td><tt>node['ambari']['server_fdqn']</tt></td>
-    <td>String</td>
     <td>FQDN for the Ambari server</td>
     <td><tt>Found by searching a node using the recipe ambari::server in the same environment</tt></td>
   </tr>
 </table>
+
+Blueprints Attributes
+----------
+
+<table>
+  <tr>
+    <th>Key</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td><tt>node['ambari']['blueprints']['blueprint_name']</tt></td>
+    <td>Name of the cluster's blueprint</td>
+  </tr>
+  <tr>
+    <td><tt>node['ambari']['blueprints']['blueprint_json']</tt></td>
+    <td>JSON description of the Blueprint. [See a single-node example here](https://cwiki.apache.org/confluence/display/AMBARI/Blueprints#Blueprints-ExampleBlueprint)</td>
+  </tr>
+  <tr>
+    <td><tt>node['ambari']['blueprints']['cluster_name']</tt></td>
+    <td>Cluster's name</td>
+  </tr>
+  <tr>
+    <td><tt>node['ambari']['blueprints']['cluster_json']</tt></td>
+    <td>JSON template for the Cluster. [See a single-node example here](https://cwiki.apache.org/confluence/display/AMBARI/Blueprints#Blueprints-ExampleClusterCreationTemplate)</td>
+  </tr>
+</table>
+
 
 Contributing
 ------------
