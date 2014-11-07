@@ -17,8 +17,7 @@
 # limitations under the License.
 #
 
-%w'wget
-pdsh'.each do | pack |
+%w'wget'.each do | pack |
   package pack do
     action :install
   end
