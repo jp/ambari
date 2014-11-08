@@ -35,5 +35,6 @@ service "postgresql" do
 end
 
 service "ambari-server" do
+  status_command "/etc/init.d/ambari-server status | grep 'Ambari Server running'"
   action [ :enable, :start ]
 end
