@@ -17,7 +17,7 @@
 # limitations under the License.
 #
 
-%w'wget'.each do | pack |
+%w'wget openssl'.each do | pack |
   package pack do
     action :install
   end
