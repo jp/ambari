@@ -17,11 +17,18 @@
 # limitations under the License.
 #
 
-%w'wget openssl'.each do | pack |
+%w'wget'.each do | pack |
   package pack do
     action :install
   end
 end
+
+%w'openssl'.each do | pack |
+  package pack do
+    action :upgrade
+  end
+end
+
 
 case node['platform']
 when "redhat","centos","amazon","scientific"
