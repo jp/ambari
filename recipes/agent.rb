@@ -44,7 +44,11 @@ execute "alternatives configured confdir" do
   command "alternatives --install /etc/ambari-agent/conf ambari-agent-conf /etc/ambari-agent/conf.chef 90"
 end
 
-ambari_server_fqdn = node[:ambari][:server_fqdn] || search(:node, 'run_list:recipe\[ambari\:\:server\] AND chef_environment:'+node.chef_environment).first[:fqdn]
+if Chef::Config[:solo]
+  Chef::Log.warn("This recipe uses search. Chef Solo does not support search.")
+else
+  ambari_server_fqdn = node['ambari']['server_fqdn'] || search('node', 'run_list:recipe\[ambari\:\:server\] AND chef_environment:'+node.chef_environment).first['fqdn']
+end
 
 template "/etc/ambari-agent/conf/ambari-agent.ini" do
   source "ambari-agent.ini.erb"
