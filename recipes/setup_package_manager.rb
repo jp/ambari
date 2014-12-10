@@ -46,9 +46,16 @@ when "redhat","centos","amazon","scientific"
   end
 when "suse"
   remote_file "/etc/zypp/repos.d/ambari.repo" do
-    source node['suse']['suse_11_repo']
+    source node['ambari']['suse_11_repo']
   end
   not_if do
     ::File.exists?("/etc/zypp/repos.d/ambari.repo")
+  end
+when "ubuntu"
+  remote_file "/etc/apt/sources.list.d/HDP.list" do
+    source node['ambari']['ubuntu_12_repo']
+  end
+  not_if do
+    ::File.exists?("/etc/apt/sources.list.d/HDP.list")
   end
 end
