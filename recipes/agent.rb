@@ -19,8 +19,7 @@
 
 include_recipe "ambari::setup_package_manager"
 
-%w'ambari-agent
-ambari-log4j'.each do | pack |
+%w'ambari-agent'.each do | pack |
   package pack do
     action :install
   end
@@ -41,7 +40,7 @@ execute "move existing ambari configuration" do
 end
 
 execute "alternatives configured confdir" do
-  command "alternatives --install /etc/ambari-agent/conf ambari-agent-conf /etc/ambari-agent/conf.chef 90"
+  command "update-alternatives --install /etc/ambari-agent/conf ambari-agent-conf /etc/ambari-agent/conf.chef 90"
 end
 
 if Chef::Config[:solo]

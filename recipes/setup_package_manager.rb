@@ -16,6 +16,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+include_recipe "apt"
 
 %w'wget'.each do | pack |
   package pack do
@@ -52,10 +53,11 @@ when "suse"
     ::File.exists?("/etc/zypp/repos.d/ambari.repo")
   end
 when "ubuntu"
-  remote_file "/etc/apt/sources.list.d/HDP.list" do
-    source node['ambari']['ubuntu_12_repo']
-  end
-  not_if do
-    ::File.exists?("/etc/apt/sources.list.d/HDP.list")
+  apt_repository 'Ambari' do
+    uri 'http://public-repo-1.hortonworks.com/ambari/ubuntu12/1.x/updates/1.7.0'
+    distribution 'Ambari'
+    components ['main']
+    keyserver    'keyserver.ubuntu.com'
+    key          'B9733A7A07513CAD'
   end
 end
