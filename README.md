@@ -10,6 +10,7 @@ Supporting (or trying to support) the versions Ambari is supporting.
 - RHEL, CentOS, and Oracle Linux 5
 - RHEL, CentOS, and Oracle Linux 6
 - Suse 11
+- Ubuntu 12.04
 
 Usage
 -----
