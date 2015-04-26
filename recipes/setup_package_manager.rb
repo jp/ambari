@@ -41,16 +41,12 @@ when "redhat","centos","amazon","scientific"
   end
   remote_file "/etc/yum.repos.d/ambari.repo" do
     source yum_repo
-  end
-  not_if do
-    ::File.exists?("/etc/yum.repos.d/ambari.repo")
+    not_if { ::File.exists?("/etc/yum.repos.d/ambari.repo") }
   end
 when "suse"
   remote_file "/etc/zypp/repos.d/ambari.repo" do
     source node['ambari']['suse_11_repo']
-  end
-  not_if do
-    ::File.exists?("/etc/zypp/repos.d/ambari.repo")
+    not_if { ::File.exists?("/etc/zypp/repos.d/ambari.repo") }
   end
 when "ubuntu"
   apt_repository 'Ambari' do
