@@ -1,11 +1,13 @@
-ambari Cookbook
+Ambari Cookbook
 ===============
 
-This cookbook installs Ambari-server and Ambari-agent in order to provision a cluster with the HDP distribution using the Blueprint API.
+Installs ambari-server and ambari-agent in order to provision a cluster with the Hortonworks Data Platform.  This cookbook also supports provisioning supported services through the Ambari API via Ambari Blueprints.  For more on blueprints, please refer to the Apache project's documentation [here](https://cwiki.apache.org/confluence/display/AMBARI/Blueprints).
+
+Supports Ambari 1.7 and 2.0.
 
 Requirements
 ------------
-Supporting (or trying to support) the versions Ambari is supporting.
+Supports all OS distributions and versions supported by Ambari.
 
 - RHEL, CentOS, and Oracle Linux 5
 - RHEL, CentOS, and Oracle Linux 6
@@ -16,7 +18,7 @@ Usage
 -----
 #### ambari::server
 
-Just include `ambari::server` in your node's `run_list`:
+Include `ambari::server` in your node's `run_list`:
 
 ```json
 {
@@ -29,7 +31,7 @@ Just include `ambari::server` in your node's `run_list`:
 
 #### ambari::agent
 
-Just include `ambari::agent` in your node's `run_list` (alll the nodes of your cluster):
+Include `ambari::agent` in your node's `run_list` (all the nodes of your cluster):
 
 The Ambari Server will be automatically detected, but you can override this detection using the attribute `node['ambari']['server']['fdqn']`.
 
@@ -58,17 +60,17 @@ Main Attributes
   <tr>
     <td><tt>node['ambari']['rhel_5_repo']</tt></td>
     <td>URL for the RHEL 5.x repository</td>
-    <td><tt>http://public-repo-1.hortonworks.com/ambari/centos5/1.x/updates/1.6.0/ambari.repo</tt></td>
+    <td><tt>http://public-repo-1.hortonworks.com/ambari/centos5/2.x/updates/2.0.0/ambari.repo</tt></td>
   </tr>
   <tr>
     <td><tt>node['ambari']['rhel_6_repo']</tt></td>
     <td>URL for the RHEL 6.x repository</td>
-    <td><tt>http://public-repo-1.hortonworks.com/ambari/centos6/1.x/updates/1.6.0/ambari.repo</tt></td>
+    <td><tt>http://public-repo-1.hortonworks.com/ambari/centos6/2.x/updates/2.0.0/ambari.repo</tt></td>
   </tr>
   <tr>
     <td><tt>node['ambari']['suse_11_repo']</tt></td>
     <td>URL for the Suse 11.x repository</td>
-    <td><tt>http://public-repo-1.hortonworks.com/ambari/suse11/1.x/updates/1.6.0/ambari.repo</tt></td>
+    <td><tt>http://public-repo-1.hortonworks.com/ambari/suse11/2.x/updates/2.0.0/ambari.repo</tt></td>
   </tr>
   <tr>
     <td><tt>node['ambari']['server_fdqn']</tt></td>
