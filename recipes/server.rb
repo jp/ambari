@@ -19,11 +19,8 @@
 
 include_recipe "ambari::setup_package_manager"
 
-%w'ambari-server
-postgresql'.each do | pack |
-  package pack do
-    action :install
-  end
+%w'ambari-server postgresql'.each do | pack |
+  package pack 
 end
 
 execute "setup ambari-server" do
