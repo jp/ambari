@@ -44,7 +44,7 @@ The Ambari Server will be automatically detected, but you can override this dete
 }
 ```
 
-#### ambari::server
+#### ambari::blueprints
 
 Include `ambari::blueprints` in your node's `run_list`. Then configure the `blueprints` attributes listed below.
 
