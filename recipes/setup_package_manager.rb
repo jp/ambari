@@ -50,10 +50,10 @@ when "suse"
   end
 when "ubuntu"
   apt_repository 'Ambari' do
-    uri node['ambari']['ubuntu_12_repo']
+    uri 'http://public-repo-1.hortonworks.com/ambari/ubuntu12/1.x/updates/1.7.0'
     distribution 'Ambari'
     components ['main']
-    keyserver    'hkp://keyserver.ubuntu.com:80'
+    keyserver    'keyserver.ubuntu.com'
     key          'B9733A7A07513CAD'
   end
 end
