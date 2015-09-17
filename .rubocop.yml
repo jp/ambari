@@ -1,0 +1,16 @@
+Encoding:
+  Enabled: False
+LineLength:
+  Max: 600
+Documentation:
+  Enabled: False
+HashSyntax:
+  Enabled: False
+SingleSpaceBeforeFirstArg:
+  Enabled: false
+AsciiComments:
+  Enabled: false
+Metrics/CyclomaticComplexity:
+  Max: 10
+Metrics/MethodLength:
+  Max: 20
