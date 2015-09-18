@@ -17,53 +17,50 @@
 # limitations under the License.
 #
 
-include_recipe "ambari::setup_package_manager"
+include_recipe 'ambari::setup_package_manager'
 
-%w'ambari-agent'.each do | pack |
+%w(ambari-agent).each do |pack|
   package pack do
     action :install
   end
 end
 
-directory "/etc/ambari-agent/conf.chef" do
-  owner "root"
-  group "root"
-  mode "0755"
+directory '/etc/ambari-agent/conf.chef' do
+  owner 'root'
+  group 'root'
+  mode '0755'
   action :create
 end
 
-execute "move existing ambari configuration" do
-  command "mv /etc/ambari-agent/conf /etc/ambari-agent/conf.dist"
+execute 'move existing ambari configuration' do
+  command 'mv /etc/ambari-agent/conf /etc/ambari-agent/conf.dist'
   only_if do
-    not ::File.exists?("/etc/ambari-agent/conf.dist")
+    !::File.exist?('/etc/ambari-agent/conf.dist')
   end
 end
 
-execute "alternatives configured confdir" do
-  command "update-alternatives --install /etc/ambari-agent/conf ambari-agent-conf /etc/ambari-agent/conf.chef 90"
+execute 'alternatives configured confdir' do
+  command 'update-alternatives --install /etc/ambari-agent/conf ambari-agent-conf /etc/ambari-agent/conf.chef 90'
 end
 
 if Chef::Config[:solo]
-  Chef::Log.warn("This recipe uses search. Chef Solo does not support search.")
+  Chef::Log.warn('This recipe uses search. Chef Solo does not support search.')
 else
-  ambari_server_fqdn = node['ambari']['server_fqdn'] || search('node', 'run_list:recipe\[ambari\:\:server\] AND chef_environment:'+node.chef_environment).first['fqdn']
+  ambari_server_fqdn = node['ambari']['server_fqdn'] || search('node', 'run_list:recipe\[ambari\:\:server\] AND chef_environment:' + node.chef_environment).first['fqdn']
 end
 
-template "/etc/ambari-agent/conf/ambari-agent.ini" do
-  source "ambari-agent.ini.erb"
+template '/etc/ambari-agent/conf/ambari-agent.ini' do
+  source 'ambari-agent.ini.erb'
   mode 0755
-  user "root"
-  group "root"
-  variables({
-    ambari_server_fqdn: ambari_server_fqdn
-  })
+  user 'root'
+  group 'root'
+  variables(ambari_server_fqdn: ambari_server_fqdn)
 end
 
-service "ambari-agent" do
-  action [ :enable, :start ]
+service 'ambari-agent' do
+  action [:enable, :start]
 end
 
-service "iptables" do
-  action [ :disable, :stop ]
+service 'iptables' do
+  action [:disable, :stop]
 end
-

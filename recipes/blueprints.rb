@@ -17,19 +17,17 @@
 # limitations under the License.
 #
 
-
 if Chef::Config[:solo]
-  Chef::Log.warn("This recipe uses search. Chef Solo does not support search.")
+  Chef::Log.warn('This recipe uses search. Chef Solo does not support search.')
 else
-  ambari_server_fqdn = node['ambari']['server_fqdn'] || search('node', 'run_list:recipe\[ambari\:\:server\] AND chef_environment:'+node.chef_environment).first['fqdn']
+  ambari_server_fqdn = node['ambari']['server_fqdn'] || search('node', 'run_list:recipe\[ambari\:\:server\] AND chef_environment:' + node.chef_environment).first['fqdn']
 end
 basic_auth_parameters = "--user #{node['ambari']['admin_user']}:#{node['ambari']['admin_password']}"
 
-execute "Init Blueprints" do
+execute 'Init Blueprints' do
   command "curl #{basic_auth_parameters} -H 'X-Requested-By:ambari-cookbook' --data '#{node['ambari']['blueprints']['blueprint_json'].to_json}' #{ambari_server_fqdn}:8080/api/v1/blueprints/#{node['ambari']['blueprints']['blueprint_name']}"
 end
 
-execute "Init Cluster" do
+execute 'Init Cluster' do
   command "curl #{basic_auth_parameters} -H 'X-Requested-By:ambari-cookbook' --data '#{node['ambari']['blueprints']['cluster_json'].to_json}' #{ambari_server_fqdn}:8080/api/v1/clusters/#{node['ambari']['blueprints']['cluster_name']}"
 end
-
