@@ -3,7 +3,7 @@
 # Attributes:: default
 #
 
-default['ambari']['server_fqdn'] = 'localhost'
+# default['ambari']['server_fqdn'] = 'localhost'
 
 # Set default version to Ambari 2.0
 default['ambari']['version'] = '2.0'

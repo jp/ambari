@@ -34,7 +34,7 @@ Include `ambari::server` in your node's `run_list`:
 
 Include `ambari::agent` in your node's `run_list` (all the nodes of your cluster):
 
-The Ambari Server will be automatically detected, but you can override this detection using the attribute `node['ambari']['server']['fdqn']`.
+The Ambari Server will be automatically detected, but you can override this detection using the attribute `node['ambari']['server_fqdn']`.
 
 ```json
 {
