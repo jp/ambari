@@ -10,10 +10,10 @@ Requirements
 ------------
 Supports all OS distributions and versions supported by Ambari.
 
-- RHEL, CentOS, and Oracle Linux 5
-- RHEL, CentOS, and Oracle Linux 6
+- RHEL, CentOS, and Oracle Linux 5, 6, and 7.
 - Suse 11
-- Ubuntu 12.04
+- Ubuntu 12 and 14.
+- Debian 7
 
 Usage
 -----
