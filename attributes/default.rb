@@ -29,10 +29,19 @@ when '2.1'
   default['ambari']['rhel_6_repo'] = 'http://public-repo-1.hortonworks.com/ambari/centos6/2.x/updates/2.1.2/ambari.repo'
   default['ambari']['rhel_7_repo'] = 'http://public-repo-1.hortonworks.com/ambari/centos7/2.x/updates/2.1.2/ambari.repo'
   default['ambari']['suse_11_repo'] = 'http://public-repo-1.hortonworks.com/ambari/suse11/2.x/updates/2.1.2/ambari.repo'
-  default['ambari']['ubuntu_12_repo'] = 'http://public-repo-1.hortonworks.com/ambari/ubuntu12/2.x/updates/2.1.2/ambari.list'
-  default['ambari']['ubuntu_14_repo'] = 'http://public-repo-1.hortonworks.com/ambari/ubuntu14/2.x/updates/2.1.2/ambari.list'
-  default['ambari']['debian_7_repo'] = 'http://public-repo-1.hortonworks.com/ambari/debian7/2.x/updates/2.1.2/ambari.list'
+  default['ambari']['ubuntu_12_repo'] = 'http://public-repo-1.hortonworks.com/ambari/ubuntu12/2.x/updates/2.1.2'
+  default['ambari']['ubuntu_14_repo'] = 'http://public-repo-1.hortonworks.com/ambari/ubuntu14/2.x/updates/2.1.2'
+  default['ambari']['debian_7_repo'] = 'http://public-repo-1.hortonworks.com/ambari/debian7/2.x/updates/2.1.2'
 end
 
 default['ambari']['admin_user'] = 'admin'
 default['ambari']['admin_password'] = 'admin'
+
+# DB attributes
+# when default it's sets up a local postgres database and the rest database attributes are omitted.
+default['ambari']['jdbc-db'] = 'default' # default|postgres|mysql|mssql|oracle|hsqldb|sqlanywhere
+default['ambari']['jdbc-driver'] = '/usr/share/java/mysql-connector-java.jar'
+default['ambari']['databasehost'] = 'localhost'
+default['ambari']['databasename'] = 'ambari'
+default['ambari']['databaseusername'] = 'ambari'
+default['ambari']['databasepassword'] = 'bigdata'

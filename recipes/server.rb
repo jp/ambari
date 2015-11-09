@@ -19,19 +19,58 @@
 
 include_recipe 'ambari::setup_package_manager'
 
-%w(ambari-server postgresql).each do |pack|
-  package pack
+package 'ambari-server'
+
+case node['ambari']['jdbc-db']
+when 'mysql'
+  case node['platform']
+  when 'ubuntu', 'debian'
+    package 'libmysql-java'
+  when 'redhat', 'centos', 'amazon', 'scientific'
+    Chef::Log.warn('not fixed yet')
+  when 'suse'
+    Chef::Log.warn('not fixed yet')
+  end
+when 'mssql'
+  Chef::Log.warn('not fixed yet')
+when 'oracle'
+  Chef::Log.warn('not fixed yet')
+when 'hsqldb'
+  Chef::Log.warn('not fixed yet')
+when 'sqlanywhere'
+  Chef::Log.warn('not fixed yet')
+end
+
+if node['ambari']['jdbc-db'] == 'default'
+  db_opts = ''
+else
+  db_opts = "--jdbc-db=#{node['ambari']['jdbc-db']} \
+--jdbc-driver=#{node['ambari']['jdbc-driver']} \
+--databasehost=#{node['ambari']['databasehost']} \
+--databasename=#{node['ambari']['databasename']} \
+--databaseusername=#{node['ambari']['databaseusername']} \
+--databasepassword=#{node['ambari']['databasepassword']}"
 end
 
 execute 'setup ambari-server' do
-  command 'ambari-server setup -s'
+  command "ambari-server setup #{db_opts} -s && touch /etc/ambari-server/.configured"
+  creates '/etc/ambari-server/.configured'
 end
-
-service 'postgresql' do
-  action [:enable, :start]
+  
+if node['ambari']['jdbc-db'] == 'default'
+  service 'postgresql' do
+    supports :status => true, :restart => true, :reload => true
+    action [:enable, :start]
+  end
+else
+  service 'postgresql' do
+    action [:disable, :stop]
+  end
 end
 
 service 'ambari-server' do
-  status_command "/etc/init.d/ambari-server status | grep 'Ambari Server running'"
-  action [:enable, :start]
+  supports :status => true, :restart => true, :reload => false
+  action [:start, :enable]
 end
+
+tag('ambari')

@@ -18,17 +18,7 @@
 #
 include_recipe 'apt'
 
-%w(wget).each do |pack|
-  package pack do
-    action :install
-  end
-end
-
-%w(openssl).each do |pack|
-  package pack do
-    action :upgrade
-  end
-end
+package 'wget' # not sure if this is needed for remote_file, lets have it anyway.
 
 case node['platform']
 when 'redhat', 'centos', 'amazon', 'scientific'
@@ -48,7 +38,7 @@ when 'suse'
     not_if { ::File.exist?('/etc/zypp/repos.d/ambari.repo') }
   end
 when 'ubuntu'
-  apt_repository 'Ambari' do
+  apt_repository 'ambari' do
     uri node['ambari']['ubuntu_12_repo']
     distribution 'Ambari'
     components ['main']
