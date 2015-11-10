@@ -46,6 +46,8 @@ if node['ambari']['jdbc-db'] == 'default'
 else
   db_opts = "--jdbc-db=#{node['ambari']['jdbc-db']} \
 --jdbc-driver=#{node['ambari']['jdbc-driver']} \
+--database=#{node['ambari']['database']} \
+--databaseport=#{node['ambari']['databaseport']} \
 --databasehost=#{node['ambari']['databasehost']} \
 --databasename=#{node['ambari']['databasename']} \
 --databaseusername=#{node['ambari']['databaseusername']} \

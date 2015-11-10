@@ -41,6 +41,8 @@ default['ambari']['admin_password'] = 'admin'
 # when default it's sets up a local postgres database and the rest database attributes are omitted.
 default['ambari']['jdbc-db'] = 'default' # default|postgres|mysql|mssql|oracle|hsqldb|sqlanywhere
 default['ambari']['jdbc-driver'] = '/usr/share/java/mysql-connector-java.jar'
+default['ambari']['database'] = 'mysql' 
+default['ambari']['databaseport'] = '3306' 
 default['ambari']['databasehost'] = 'localhost'
 default['ambari']['databasename'] = 'ambari'
 default['ambari']['databaseusername'] = 'ambari'
