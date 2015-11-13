@@ -21,37 +21,45 @@ include_recipe 'ambari::setup_package_manager'
 
 package 'ambari-server'
 
-case node['ambari']['jdbc-db']
+# This could probably be a bit more clean instead of having a nested case.
+# it works now, but will be ugly if we add support for all cases.
+case node['ambari']['database']['type']
+when 'embedded'
+  db_opts = ''
 when 'mysql'
-  case node['platform']
-  when 'ubuntu', 'debian'
-    package 'libmysql-java'
-  when 'redhat', 'centos', 'amazon', 'scientific'
-    Chef::Log.warn('not fixed yet')
-  when 'suse'
-    Chef::Log.warn('not fixed yet')
-  end
-when 'mssql'
-  Chef::Log.warn('not fixed yet')
-when 'oracle'
-  Chef::Log.warn('not fixed yet')
-when 'hsqldb'
-  Chef::Log.warn('not fixed yet')
-when 'sqlanywhere'
-  Chef::Log.warn('not fixed yet')
+  db_opts = "--database=#{node['ambari']['database']['type']} \
+    --databaseport=#{node['ambari']['database']['port']} \
+    --databasehost=#{node['ambari']['database']['host']} \
+    --databasename=#{node['ambari']['database']['name']} \
+    --databaseusername=#{node['ambari']['database']['username']} \
+    --databasepassword=#{node['ambari']['database']['password']}"
+when 'mssql', 'oracle', 'postgres', 'sqlanywhere'
+  # needs db_opts cause the options differ from each db type.
+  raise "#{node['ambari']['database']['type']} is not supported yet"
 end
 
-if node['ambari']['jdbc-db'] == 'default'
-  db_opts = ''
+# this case sets the jdbc driver package name for each distro and DB type (unless database type is 'embedded').
+case node['platform']
+when 'ubuntu', 'debian'
+  jdbcpkg = 'libmysql-java' if node['ambari']['database']['type'] == 'mysql'
+when 'redhat', 'centos', 'amazon', 'scientific'
+  # basically needs to know the "mysql java connector" package name for each distro, like the ubuntu/debian above.
+  raise "#{node['ambari']['database']['type']} is not supported yet for RPM based distributions"
+  jdbcpkg = 'XXXXXXXXXXXX' if node['ambari']['database']['type'] == 'mysql'
+when 'suse'
+  # basically needs to know the "mysql java connector" package name for each distro, like the ubuntu/debian above.
+  raise "#{node['ambari']['database']['type']} is not supported yet for RPM based distributions"
+  jdbcpkg = 'XXXXXXXXXXXX' if node['ambari']['database']['type'] == 'mysql'
+end unless node['ambari']['database']['type'] == 'embedded'
+
+# install jdbc driver.
+if node['ambari']['jdbc']['url'] = ''
+  package jdbcpkg
 else
-  db_opts = "--jdbc-db=#{node['ambari']['jdbc-db']} \
---jdbc-driver=#{node['ambari']['jdbc-driver']} \
---database=#{node['ambari']['database']} \
---databaseport=#{node['ambari']['databaseport']} \
---databasehost=#{node['ambari']['databasehost']} \
---databasename=#{node['ambari']['databasename']} \
---databaseusername=#{node['ambari']['databaseusername']} \
---databasepassword=#{node['ambari']['databasepassword']}"
+  remote_file node['ambari']['jdbc']['path'] do
+    source node['ambari']['jdbc']['url']
+    not_if { ::File.exist?(node['ambari']['jdbc']['path']) }
+  end
 end
 
 execute 'setup ambari-server' do
@@ -59,7 +67,7 @@ execute 'setup ambari-server' do
   creates '/etc/ambari-server/.configured'
 end
   
-if node['ambari']['jdbc-db'] == 'default'
+if node['ambari']['database']['type'] == 'embedded'
   service 'postgresql' do
     supports :status => true, :restart => true, :reload => true
     action [:enable, :start]

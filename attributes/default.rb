@@ -38,12 +38,14 @@ default['ambari']['admin_user'] = 'admin'
 default['ambari']['admin_password'] = 'admin'
 
 # DB attributes
-# when default it's sets up a local postgres database and the rest database attributes are omitted.
-default['ambari']['jdbc-db'] = 'default' # default|postgres|mysql|mssql|oracle|hsqldb|sqlanywhere
-default['ambari']['jdbc-driver'] = '/usr/share/java/mysql-connector-java.jar'
-default['ambari']['database'] = 'mysql' 
-default['ambari']['databaseport'] = '3306' 
-default['ambari']['databasehost'] = 'localhost'
-default['ambari']['databasename'] = 'ambari'
-default['ambari']['databaseusername'] = 'ambari'
-default['ambari']['databasepassword'] = 'bigdata'
+default['ambari']['database']['type'] = 'embedded' # embedded|mysql (can support following in the future oracle|mssql|postgres|sqlanywhere)
+# These attributes below are omittied if database type is 'embedded'.
+default['ambari']['database']['host'] = 'localhost'
+default['ambari']['database']['port'] = '3306'
+default['ambari']['database']['name'] = 'ambari'
+default['ambari']['database']['username'] = 'ambari'
+default['ambari']['database']['password'] = 'bigdata'
+
+# JDBC attributes, will only be used if url is specified and db type isn't 'embedded'.
+default['ambari']['jdbc']['url'] = '' # leave blank if no remote file
+default['ambari']['jdbc']['path'] = '/usr/share/java/mysql-connector-java.jar'
