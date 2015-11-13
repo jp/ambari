@@ -16,7 +16,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-include_recipe 'apt'
 
 package 'wget' # not sure if this is needed for remote_file, lets have it anyway.
 
@@ -38,6 +37,8 @@ when 'suse'
     not_if { ::File.exist?('/etc/zypp/repos.d/ambari.repo') }
   end
 when 'ubuntu'
+  include_recipe 'apt'
+  
   apt_repository 'ambari' do
     uri node['ambari']['ubuntu_12_repo']
     distribution 'Ambari'
