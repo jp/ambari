@@ -53,7 +53,7 @@ when 'suse'
 end unless node['ambari']['database']['type'] == 'embedded'
 
 # install jdbc driver.
-if node['ambari']['jdbc']['url'] = ''
+if node['ambari']['jdbc']['url'] == ''
   package jdbcpkg
 else
   remote_file node['ambari']['jdbc']['path'] do
