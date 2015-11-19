@@ -17,6 +17,7 @@
 # limitations under the License.
 #
 
+include_recipe 'ambari::default'
 include_recipe 'ambari::setup_package_manager'
 
 package 'ambari-server'
