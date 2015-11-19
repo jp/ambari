@@ -37,6 +37,8 @@ when 'redhat', 'centos', 'amazon', 'scientific'
     yum_repo = node['ambari']['rhel_5_repo']
   when 6
     yum_repo = node['ambari']['rhel_6_repo']
+  when 7
+    yum_repo = node['ambari']['rhel_7_repo']
   end
   remote_file '/etc/yum.repos.d/ambari.repo' do
     source yum_repo
