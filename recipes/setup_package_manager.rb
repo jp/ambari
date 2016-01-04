@@ -52,7 +52,7 @@ when 'suse'
 when 'ubuntu'
   case node['platform_version']
   when '12.04'
-    apt_repository 'Ambari' do
+    apt_repository 'ambari' do
       uri node['ambari']['ubuntu_12_repo']
       distribution 'Ambari'
       components ['main']
@@ -60,7 +60,7 @@ when 'ubuntu'
       key          'B9733A7A07513CAD'
     end
   when '14.04'
-    apt_repository 'Ambari' do
+    apt_repository 'ambari' do
       uri node['ambari']['ubuntu_14_repo']
       distribution 'Ambari'
       components ['main']
