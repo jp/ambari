@@ -4,7 +4,7 @@ Ambari Cookbook
 
 Install ambari-server and ambari-agent in order to provision a cluster with the Hortonworks Data Platform.  This cookbook also supports provisioning supported services through the Ambari API via Ambari Blueprints.  For more on blueprints, please refer to the Apache project's documentation [here](https://cwiki.apache.org/confluence/display/AMBARI/Blueprints).
 
-Supports Ambari 1.7, 2.0, and 2.1.
+Supports Ambari 1.7, 2.0,, 2.1 and 2.2.
 
 Requirements
 ------------
