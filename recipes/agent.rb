@@ -17,13 +17,10 @@
 # limitations under the License.
 #
 
+include_recipe 'ambari::default'
 include_recipe 'ambari::setup_package_manager'
 
-%w(ambari-agent).each do |pack|
-  package pack do
-    action :install
-  end
-end
+package 'ambari-agent'
 
 directory '/etc/ambari-agent/conf.chef' do
   owner 'root'
@@ -41,35 +38,18 @@ end
 
 execute 'alternatives configured confdir' do
   command 'update-alternatives --install /etc/ambari-agent/conf ambari-agent-conf /etc/ambari-agent/conf.chef 90'
+  not_if 'update-alternatives --display ambari-agent-conf |grep "/etc/ambari-agent/conf.chef"'
 end
 
-# Get Ambari Server FQDN
-#
-# Logic:
-# - is server set?
-# - am I server?
-# - must search
-#   - can I search?
-#   - search
-ambari_server_fqdn =
-  if node['ambari'].key?('server_fqdn') # Server is set
-    node['ambari']['server_fqdn']
-  elsif node['recipes'].include?('ambari::server') # Server is me
-    node['fqdn']
-  else # must search
-    if Chef::Config[:solo] # chef-solo can't search, by default
-      if node['recipes'].include?('chef-solo-search::default')
-        do_search = true # it can with chef-solo-search
-      else
-        do_search = false
-      end
-    else
-      do_search = true
-    end
-    if do_search == true
-      search('node', 'recipes:ambari\:\:server AND chef_environment:' + node.chef_environment).first['fqdn']
-    end
-  end
+# Get ambari-server fqdn
+if Chef::Config[:solo]
+  errmsg = 'This recipe uses search, Chef Solo does not support search.'
+  Chef::Log.warn(errmsg)
+elseif tagged?('ambari')
+  ambari_server_fqdn = node['fqdn']
+else
+  ambari_server_fqdn = search('node', "tags:ambari AND chef_environment:#{node.chef_environment}").first['fqdn']
+end
 
 template '/etc/ambari-agent/conf/ambari-agent.ini' do
   source 'ambari-agent.ini.erb'
@@ -80,9 +60,6 @@ template '/etc/ambari-agent/conf/ambari-agent.ini' do
 end
 
 service 'ambari-agent' do
+  supports :status => true, :restart => true, :reload => false
   action [:enable, :start]
-end
-
-service 'iptables' do
-  action [:disable, :stop]
 end

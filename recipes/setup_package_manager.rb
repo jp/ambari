@@ -16,19 +16,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-include_recipe 'apt'
 
-%w(wget).each do |pack|
-  package pack do
-    action :install
-  end
-end
-
-%w(openssl).each do |pack|
-  package pack do
-    action :upgrade
-  end
-end
+package 'wget' # not sure if this is needed for remote_file, lets have it anyway.
 
 case node['platform']
 when 'redhat', 'centos', 'amazon', 'scientific'
@@ -50,6 +39,8 @@ when 'suse'
     not_if { ::File.exist?('/etc/zypp/repos.d/ambari.repo') }
   end
 when 'ubuntu'
+  include_recipe 'apt'
+
   case node['platform_version']
   when '12.04'
     apt_repository 'ambari' do

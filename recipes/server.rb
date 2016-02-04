@@ -17,21 +17,71 @@
 # limitations under the License.
 #
 
+include_recipe 'ambari::default'
 include_recipe 'ambari::setup_package_manager'
 
-%w(ambari-server postgresql).each do |pack|
-  package pack
+package 'ambari-server'
+
+# This could probably be a bit more clean instead of having a nested case.
+# it works now, but will be ugly if we add support for all cases.
+case node['ambari']['database']['type']
+when 'embedded'
+  db_opts = ''
+when 'mysql'
+  db_opts = "--database=#{node['ambari']['database']['type']} \
+    --databaseport=#{node['ambari']['database']['port']} \
+    --databasehost=#{node['ambari']['database']['host']} \
+    --databasename=#{node['ambari']['database']['name']} \
+    --databaseusername=#{node['ambari']['database']['username']} \
+    --databasepassword=#{node['ambari']['database']['password']}"
+when 'mssql', 'oracle', 'postgres', 'sqlanywhere'
+  # needs db_opts cause the options differ from each db type.
+  raise "#{node['ambari']['database']['type']} is not supported yet"
+end
+
+# this case sets the jdbc driver package name for each distro and DB type (unless database type is 'embedded').
+case node['platform']
+when 'ubuntu', 'debian'
+  jdbcpkg = 'libmysql-java' if node['ambari']['database']['type'] == 'mysql'
+when 'redhat', 'centos', 'amazon', 'scientific'
+  # basically needs to know the "mysql java connector" package name for each distro, like the ubuntu/debian above.
+  raise "#{node['ambari']['database']['type']} is not supported yet for RPM based distributions"
+  jdbcpkg = 'XXXXXXXXXXXX' if node['ambari']['database']['type'] == 'mysql'
+when 'suse'
+  # basically needs to know the "mysql java connector" package name for each distro, like the ubuntu/debian above.
+  raise "#{node['ambari']['database']['type']} is not supported yet for RPM based distributions"
+  jdbcpkg = 'XXXXXXXXXXXX' if node['ambari']['database']['type'] == 'mysql'
+end unless node['ambari']['database']['type'] == 'embedded'
+
+# install jdbc driver.
+if node['ambari']['jdbc']['url'] == ''
+  package jdbcpkg
+else
+  remote_file node['ambari']['jdbc']['path'] do
+    source node['ambari']['jdbc']['url']
+    not_if { ::File.exist?(node['ambari']['jdbc']['path']) }
+  end
 end
 
 execute 'setup ambari-server' do
-  command 'ambari-server setup -s'
+  command "ambari-server setup #{db_opts} -s && touch /etc/ambari-server/.configured"
+  creates '/etc/ambari-server/.configured'
 end
-
-service 'postgresql' do
-  action [:enable, :start]
+  
+if node['ambari']['database']['type'] == 'embedded'
+  service 'postgresql' do
+    supports :status => true, :restart => true, :reload => true
+    action [:enable, :start]
+  end
+else
+  service 'postgresql' do
+    action [:disable, :stop]
+  end
 end
 
 service 'ambari-server' do
-  status_command "/etc/init.d/ambari-server status | grep 'Ambari Server running'"
-  action [:enable, :start]
+  supports :status => true, :restart => true, :reload => false
+  action [:start, :enable]
 end
+
+tag('ambari')

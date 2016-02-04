@@ -17,6 +17,8 @@
 # limitations under the License.
 #
 
+package 'curl'
+
 if Chef::Config[:solo]
   Chef::Log.warn('This recipe uses search. Chef Solo does not support search.')
 else
