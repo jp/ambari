@@ -26,6 +26,8 @@ when 'redhat', 'centos', 'amazon', 'scientific'
     yum_repo = node['ambari']['rhel_5_repo']
   when 6
     yum_repo = node['ambari']['rhel_6_repo']
+  when 7
+    yum_repo = node['ambari']['rhel_7_repo']
   end
   remote_file '/etc/yum.repos.d/ambari.repo' do
     source yum_repo
@@ -38,12 +40,23 @@ when 'suse'
   end
 when 'ubuntu'
   include_recipe 'apt'
-  
-  apt_repository 'ambari' do
-    uri node['ambari']['ubuntu_12_repo']
-    distribution 'Ambari'
-    components ['main']
-    keyserver    'hkp://keyserver.ubuntu.com:80'
-    key          'B9733A7A07513CAD'
+
+  case node['platform_version']
+  when '12.04'
+    apt_repository 'ambari' do
+      uri node['ambari']['ubuntu_12_repo']
+      distribution 'Ambari'
+      components ['main']
+      keyserver    'hkp://keyserver.ubuntu.com:80'
+      key          'B9733A7A07513CAD'
+    end
+  when '14.04'
+    apt_repository 'ambari' do
+      uri node['ambari']['ubuntu_14_repo']
+      distribution 'Ambari'
+      components ['main']
+      keyserver    'hkp://keyserver.ubuntu.com:80'
+      key          'B9733A7A07513CAD'
+    end
   end
 end
