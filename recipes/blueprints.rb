@@ -17,10 +17,13 @@
 # limitations under the License.
 #
 
-if Chef::Config[:solo]
-  Chef::Log.warn('This recipe uses search. Chef Solo does not support search.')
-else
-  ambari_server_fqdn = node['ambari']['server_fqdn'] || search('node', 'run_list:recipe\[ambari\:\:server\] AND chef_environment:' + node.chef_environment).first['fqdn']
+ambari_server_fqdn = node['ambari']['server_fqdn'] || begin
+  if Chef::Config[:solo]
+    Chef::Log.warn('This recipe uses search. Chef Solo does not support search.')
+    nil
+  else
+    search('node', 'run_list:recipe\[ambari\:\:server\] AND chef_environment:' + node.chef_environment).first['fqdn']
+  end
 end
 basic_auth_parameters = "--user #{node['ambari']['admin_user']}:#{node['ambari']['admin_password']}"
 
