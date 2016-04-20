@@ -57,15 +57,15 @@ ambari_server_fqdn =
   elsif node['recipes'].include?('ambari::server') # Server is me
     node['fqdn']
   else # must search
-    if Chef::Config[:solo] # chef-solo can't search, by default
-      if node['recipes'].include?('chef-solo-search::default')
-        do_search = true # it can with chef-solo-search
-      else
-        do_search = false
-      end
-    else
-      do_search = true
-    end
+    do_search = if Chef::Config[:solo] # chef-solo can't search, by default
+                  if node['recipes'].include?('chef-solo-search::default')
+                    true # it can with chef-solo-search
+                  else
+                    false
+                  end
+                else
+                  true
+                end
     if do_search == true
       search('node', 'recipes:ambari\:\:server AND chef_environment:' + node.chef_environment).first['fqdn']
     end
