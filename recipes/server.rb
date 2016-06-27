@@ -61,7 +61,7 @@ else
     source node['ambari']['jdbc']['url']
     not_if { ::File.exist?(node['ambari']['jdbc']['path']) }
   end
-end
+end unless node['ambari']['database']['type'] == 'embedded'
 
 execute 'setup ambari-server' do
   command "ambari-server setup #{db_opts} -s && touch /etc/ambari-server/.configured"
