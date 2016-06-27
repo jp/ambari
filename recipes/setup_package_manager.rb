@@ -49,6 +49,7 @@ when 'debian'
       keyserver    'hkp://keyserver.ubuntu.com:80'
       key          'B9733A7A07513CAD'
     end
+  end
 when 'ubuntu'
   include_recipe 'apt'
   case node['platform_version']
