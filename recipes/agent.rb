@@ -17,13 +17,10 @@
 # limitations under the License.
 #
 
+include_recipe 'ambari::default'
 include_recipe 'ambari::setup_package_manager'
 
-%w(ambari-agent).each do |pack|
-  package pack do
-    action :install
-  end
-end
+package 'ambari-agent'
 
 directory '/etc/ambari-agent/conf.chef' do
   owner 'root'
@@ -41,6 +38,7 @@ end
 
 execute 'alternatives configured confdir' do
   command 'update-alternatives --install /etc/ambari-agent/conf ambari-agent-conf /etc/ambari-agent/conf.chef 90'
+  not_if 'update-alternatives --display ambari-agent-conf |grep "/etc/ambari-agent/conf.chef"'
 end
 
 # Get Ambari Server FQDN
@@ -80,9 +78,6 @@ template '/etc/ambari-agent/conf/ambari-agent.ini' do
 end
 
 service 'ambari-agent' do
+  supports :status => true, :restart => true, :reload => false
   action [:enable, :start]
-end
-
-service 'iptables' do
-  action [:disable, :stop]
 end
