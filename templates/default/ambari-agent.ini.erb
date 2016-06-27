@@ -13,40 +13,40 @@
 # See the License for the specific
 
 [server]
-hostname=<%= @ambari_server_fqdn %>
-url_port=8440
-secured_url_port=8441
+hostname = <%= @ambari_server_fqdn %>
+url_port = 8440
+secured_url_port = 8441
 
 [agent]
-prefix=/var/lib/ambari-agent/data
-tmp_dir=/var/lib/ambari-agent/data/tmp
-;loglevel=(DEBUG/INFO)
-loglevel=INFO
-data_cleanup_interval=86400
-data_cleanup_max_age=2592000
-data_cleanup_max_size_MB = 100
-ping_port=8670
-cache_dir=/var/lib/ambari-agent/cache
-tolerate_download_failures=true
-
-[command]
-maxretries=2
-sleepBetweenRetries=1
+prefix = /var/lib/ambari-agent/data
+loglevel = INFO
+data_cleanup_interval = 86400
+data_cleanup_max_age = 2592000
+data_cleanup_max_size_mb = 100
+ping_port = 8670
+cache_dir = /var/lib/ambari-agent/cache
+tolerate_download_failures = true
+run_as_user = root
+parallel_execution = 0
+alert_grace_period = 5
+tmp_dir = /var/lib/ambari-agent/data/tmp
 
 [security]
-keysdir=/var/lib/ambari-agent/keys
-server_crt=ca.crt
-passphrase_env_var_name=AMBARI_PASSPHRASE
+keysdir = /var/lib/ambari-agent/keys
+server_crt = ca.crt
+passphrase_env_var_name = AMBARI_PASSPHRASE
 
 [services]
-pidLookupPath=/var/run/
+pidlookuppath = /var/run/
 
 [heartbeat]
-state_interval=6
-dirs=/etc/hadoop,/etc/hadoop/conf,/etc/hbase,/etc/hcatalog,/etc/hive,/etc/oozie,
-  /etc/sqoop,/etc/ganglia,/etc/nagios,
-  /var/run/hadoop,/var/run/zookeeper,/var/run/hbase,/var/run/templeton,/var/run/oozie,
-  /var/log/hadoop,/var/log/zookeeper,/var/log/hbase,/var/run/templeton,/var/log/hive,
-  /var/log/nagios
-; 0 - unlimited
-log_lines_count=300
+state_interval = 6
+dirs = /etc/hadoop,/etc/hadoop/conf,/etc/hbase,/etc/hcatalog,/etc/hive,/etc/oozie,
+        /etc/sqoop,/etc/ganglia,
+        /var/run/hadoop,/var/run/zookeeper,/var/run/hbase,/var/run/templeton,/var/run/oozie,
+        /var/log/hadoop,/var/log/zookeeper,/var/log/hbase,/var/run/templeton,/var/log/hive
+log_lines_count = 300
+
+[logging]
+syslog_enabled = 0
+
