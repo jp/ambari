@@ -44,13 +44,9 @@ case node['platform']
 when 'ubuntu', 'debian'
   jdbcpkg = 'libmysql-java' if node['ambari']['database']['type'] == 'mysql'
 when 'redhat', 'centos', 'amazon', 'scientific'
-  # basically needs to know the "mysql java connector" package name for each distro, like the ubuntu/debian above.
-  raise "#{node['ambari']['database']['type']} is not supported yet for RPM based distributions"
-  jdbcpkg = 'XXXXXXXXXXXX' if node['ambari']['database']['type'] == 'mysql'
+  jdbcpkg = 'mysql-connector-java' if node['ambari']['database']['type'] == 'mysql'
 when 'suse'
-  # basically needs to know the "mysql java connector" package name for each distro, like the ubuntu/debian above.
-  raise "#{node['ambari']['database']['type']} is not supported yet for RPM based distributions"
-  jdbcpkg = 'XXXXXXXXXXXX' if node['ambari']['database']['type'] == 'mysql'
+  jdbcpkg = 'mysql-connector-java' if node['ambari']['database']['type'] == 'mysql'
 end unless node['ambari']['database']['type'] == 'embedded'
 
 # install jdbc driver.
