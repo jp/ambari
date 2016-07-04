@@ -73,7 +73,7 @@ ambari_server_fqdn =
 
 template '/etc/ambari-agent/conf/ambari-agent.ini' do
   source 'ambari-agent.ini.erb'
-  mode 0755
+  mode 0o755
   user 'root'
   group 'root'
   variables(ambari_server_fqdn: ambari_server_fqdn)
