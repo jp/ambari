@@ -19,9 +19,9 @@
 
 case node['lsb']['codename']
 when 'precise', 'trusty', 'wheezy'
-  ruby_block "remove 127.0.1.1 /etc/hosts" do
+  ruby_block 'remove 127.0.1.1 /etc/hosts' do
     block do
-      file = Chef::Util::FileEdit.new("/etc/hosts")
+      file = Chef::Util::FileEdit.new('/etc/hosts')
       file.search_file_delete_line(/^127\.0\.1\.1/)
       file.write_file
     end
