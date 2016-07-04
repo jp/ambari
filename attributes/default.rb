@@ -46,6 +46,5 @@ when '2.2.1'
   node.default['ambari']['debian_7_repo'] = 'http://public-repo-1.hortonworks.com/ambari/debian7/2.x/updates/2.2.1.1/ambari.list'
 end
 
-
 node.default['ambari']['admin_user'] = 'admin'
 node.default['ambari']['admin_password'] = 'admin'
