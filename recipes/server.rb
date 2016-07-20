@@ -76,6 +76,7 @@ else
 end
 
 service 'ambari-server' do
+  status_command 'service ambari-server status'
   supports :status => true, :restart => true, :reload => false
   action [:start, :enable]
 end
