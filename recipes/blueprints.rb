@@ -49,10 +49,18 @@ ambari_server_fqdn =
 
 basic_auth_parameters = "--user #{node['ambari']['admin_user']}:#{node['ambari']['admin_password']}"
 
+file '/tmp/blueprint.json' do
+  content Chef::JSONCompat.to_json_pretty(node['ambari']['blueprints']['blueprint_json'].to_hash)
+end
+
+file '/tmp/cluster.json' do
+  content Chef::JSONCompat.to_json_pretty(node['ambari']['blueprints']['cluster_json'].to_hash)
+end
+
 execute 'Init Blueprints' do
-  command "curl #{basic_auth_parameters} -H 'X-Requested-By:ambari-cookbook' --data '#{node['ambari']['blueprints']['blueprint_json'].to_json}' #{ambari_server_fqdn}:8080/api/v1/blueprints/#{node['ambari']['blueprints']['blueprint_name']}"
+  command "curl #{basic_auth_parameters} -H 'X-Requested-By:ambari-cookbook' --data @/tmp/blueprint.json #{ambari_server_fqdn}:8080/api/v1/blueprints/#{node['ambari']['blueprints']['blueprint_name']}"
 end
 
 execute 'Init Cluster' do
-  command "curl #{basic_auth_parameters} -H 'X-Requested-By:ambari-cookbook' --data '#{node['ambari']['blueprints']['cluster_json'].to_json}' #{ambari_server_fqdn}:8080/api/v1/clusters/#{node['ambari']['blueprints']['cluster_name']}"
+  command "curl #{basic_auth_parameters} -H 'X-Requested-By:ambari-cookbook' --data @/tmp/cluster.json #{ambari_server_fqdn}:8080/api/v1/clusters/#{node['ambari']['blueprints']['cluster_name']}"
 end
