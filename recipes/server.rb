@@ -50,20 +50,22 @@ when 'suse'
 end unless node['ambari']['database']['type'] == 'embedded'
 
 # install jdbc driver.
-if node['ambari']['jdbc']['url'] == ''
-  package jdbcpkg
-else
-  remote_file node['ambari']['jdbc']['path'] do
-    source node['ambari']['jdbc']['url']
-    not_if { ::File.exist?(node['ambari']['jdbc']['path']) }
+if node['ambari']['database']['type'] != 'embedded'
+  if node['ambari']['jdbc']['url'] == ''
+    package jdbcpkg
+  else
+    remote_file node['ambari']['jdbc']['path'] do
+      source node['ambari']['jdbc']['url']
+      not_if { ::File.exist?(node['ambari']['jdbc']['path']) }
+    end
   end
-end unless node['ambari']['database']['type'] == 'embedded'
+end
 
 execute 'setup ambari-server' do
   command "ambari-server setup #{db_opts} -s && touch /etc/ambari-server/.configured"
   creates '/etc/ambari-server/.configured'
 end
-  
+
 if node['ambari']['database']['type'] == 'embedded'
   service 'postgresql' do
     supports :status => true, :restart => true, :reload => true
