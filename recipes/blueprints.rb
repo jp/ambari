@@ -43,7 +43,7 @@ ambari_server_fqdn =
                   true
                 end
     if do_search == true
-      search('node', 'recipes:ambari\:\:server AND chef_environment:' + node.chef_environment).first['fqdn']
+      search('node', 'recipes:ambari\:\:server AND chef_environment:' + node.chef_environment).first['fqdn'] # ~FC010
     end
   end
 
