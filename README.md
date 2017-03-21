@@ -7,7 +7,7 @@ Install ambari-server and ambari-agent in order to provision a cluster with the 
 
 Requirements
 ------------
-Supports all OS distributions and versions supported by Ambari.  Supports Ambari versions `1.7` and `2.0`-`2.2.1`.
+Supports all OS distributions and versions supported by Ambari.  Supports Ambari versions `1.7` through `2.4`.
 
 - RHEL, CentOS, and Oracle Linux 5, 6, and 7.
 - Suse 11
