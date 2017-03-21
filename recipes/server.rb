@@ -40,30 +40,34 @@ when 'mssql', 'oracle', 'postgres', 'sqlanywhere'
 end
 
 # this case sets the jdbc driver package name for each distro and DB type (unless database type is 'embedded').
-case node['platform']
-when 'ubuntu', 'debian'
-  jdbcpkg = 'libmysql-java' if node['ambari']['database']['type'] == 'mysql'
-when 'redhat', 'centos', 'amazon', 'scientific'
-  jdbcpkg = 'mysql-connector-java' if node['ambari']['database']['type'] == 'mysql'
-when 'suse'
-  jdbcpkg = 'mysql-connector-java' if node['ambari']['database']['type'] == 'mysql'
-end unless node['ambari']['database']['type'] == 'embedded'
+unless node['ambari']['database']['type'] == 'embedded'
+  case node['platform']
+  when 'ubuntu', 'debian'
+    jdbcpkg = 'libmysql-java' if node['ambari']['database']['type'] == 'mysql'
+  when 'redhat', 'centos', 'amazon', 'scientific'
+    jdbcpkg = 'mysql-connector-java' if node['ambari']['database']['type'] == 'mysql'
+  when 'suse'
+    jdbcpkg = 'mysql-connector-java' if node['ambari']['database']['type'] == 'mysql'
+  end
+end
 
 # install jdbc driver.
-if node['ambari']['jdbc']['url'] == ''
-  package jdbcpkg
-else
-  remote_file node['ambari']['jdbc']['path'] do
-    source node['ambari']['jdbc']['url']
-    not_if { ::File.exist?(node['ambari']['jdbc']['path']) }
+unless node['ambari']['database']['type'] == 'embedded'
+  if node['ambari']['jdbc']['url'] == ''
+    package jdbcpkg
+  else
+    remote_file node['ambari']['jdbc']['path'] do
+      source node['ambari']['jdbc']['url']
+      not_if { ::File.exist?(node['ambari']['jdbc']['path']) }
+    end
   end
-end unless node['ambari']['database']['type'] == 'embedded'
+end
 
 execute 'setup ambari-server' do
   command "ambari-server setup #{db_opts} -s && touch /etc/ambari-server/.configured"
   creates '/etc/ambari-server/.configured'
 end
-  
+
 if node['ambari']['database']['type'] == 'embedded'
   service 'postgresql' do
     supports :status => true, :restart => true, :reload => true
