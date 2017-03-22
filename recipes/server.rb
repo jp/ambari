@@ -22,38 +22,26 @@ include_recipe 'ambari::setup_package_manager'
 
 package 'ambari-server'
 
-# This could probably be a bit more clean instead of having a nested case.
-# it works now, but will be ugly if we add support for all cases.
+db_opts = ''
+# Unfortunately, we only support embedded or mysql at this time
 case node['ambari']['database']['type']
-when 'embedded'
-  db_opts = ''
 when 'mysql'
-  db_opts = "--database=#{node['ambari']['database']['type']} \
-    --databaseport=#{node['ambari']['database']['port']} \
-    --databasehost=#{node['ambari']['database']['host']} \
-    --databasename=#{node['ambari']['database']['name']} \
-    --databaseusername=#{node['ambari']['database']['username']} \
-    --databasepassword=#{node['ambari']['database']['password']}"
-when 'mssql', 'oracle', 'postgres', 'sqlanywhere'
-  # needs db_opts cause the options differ from each db type.
-  raise "#{node['ambari']['database']['type']} is not supported yet"
-end
-
-# this case sets the jdbc driver package name for each distro and DB type (unless database type is 'embedded').
-unless node['ambari']['database']['type'] == 'embedded'
-  case node['platform']
-  when 'ubuntu', 'debian'
-    jdbcpkg = 'libmysql-java' if node['ambari']['database']['type'] == 'mysql'
-  when 'redhat', 'centos', 'amazon', 'scientific'
-    jdbcpkg = 'mysql-connector-java' if node['ambari']['database']['type'] == 'mysql'
-  when 'suse'
-    jdbcpkg = 'mysql-connector-java' if node['ambari']['database']['type'] == 'mysql'
-  end
-end
-
-# install jdbc driver.
-unless node['ambari']['database']['type'] == 'embedded'
-  if node['ambari']['jdbc']['url'] == ''
+  db_opts += "--database=#{node['ambari']['database']['type']}"
+  db_opts += " --databaseport=#{node['ambari']['database']['port']}"
+  db_opts += " --databasehost=#{node['ambari']['database']['host']}"
+  db_opts += " --databasename=#{node['ambari']['database']['name']}"
+  db_opts += " --databaseusername=#{node['ambari']['database']['username']}"
+  db_opts += " --databasepassword=#{node['ambari']['database']['password']}"
+  db_opts += " --jdbc-db=#{node['ambari']['database']['type']}"
+  db_opts += " --jdbc-driver=#{node['ambari']['jdbc']['path']}"
+  jdbcpkg =
+    if node['platform_family'] == 'debian'
+      'libmysql-java'
+    else
+      'mysql-connector-java'
+    end
+  # Install JDBC driver
+  if node['ambari']['jdbc']['url'].empty? || node['ambari']['jdbc']['url'].nil?
     package jdbcpkg
   else
     remote_file node['ambari']['jdbc']['path'] do
@@ -61,6 +49,10 @@ unless node['ambari']['database']['type'] == 'embedded'
       not_if { ::File.exist?(node['ambari']['jdbc']['path']) }
     end
   end
+
+when 'mssql', 'oracle', 'postgres', 'sqlanywhere'
+  # needs db_opts cause the options differ from each db type.
+  raise "#{node['ambari']['database']['type']} is not supported yet"
 end
 
 execute 'setup ambari-server' do
