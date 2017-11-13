@@ -22,6 +22,9 @@ Metrics/PerceivedComplexity:
   Enabled: false
 Style/FrozenStringLiteralComment:
   Enabled: false
+Style/PercentLiteralDelimiters:
+  PreferredDelimiters:
+    '%w': '[]'
 Style/SpaceBeforeFirstArg:
   Enabled: false
 Style/SymbolArray:
