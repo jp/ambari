@@ -1,15 +1,13 @@
-Encoding:
-  Enabled: False
-LineLength:
-  Max: 600
+AsciiComments:
+  Enabled: false
 Documentation:
+  Enabled: False
+Encoding:
   Enabled: False
 HashSyntax:
   Enabled: False
-Style/SpaceBeforeFirstArg:
-  Enabled: false
-AsciiComments:
-  Enabled: false
+LineLength:
+  Max: 600
 Metrics/AbcSize:
   Enabled: false
 Metrics/BlockLength:
@@ -24,3 +22,7 @@ Metrics/PerceivedComplexity:
   Enabled: false
 Style/FrozenStringLiteralComment:
   Enabled: false
+Style/SpaceBeforeFirstArg:
+  Enabled: false
+Style/SymbolArray:
+  EnforcedStyle: brackets
